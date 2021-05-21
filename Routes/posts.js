@@ -10,7 +10,7 @@ const Post= require('../models/Post');
 
 
 //Get all the  blogs
-router.get('/',async(req,res)=>{
+router.get('/blogs',async(req,res)=>{
    try {
        const posts=await Post.find();
        res.send(posts);
@@ -20,7 +20,7 @@ router.get('/',async(req,res)=>{
     });
 
 //Add a new blog
-router.post('/',async(req,res)=>{
+router.post('/new',async(req,res)=>{
     console.log(req.body);
 
     const posts=new Post({
@@ -36,7 +36,7 @@ router.post('/',async(req,res)=>{
 });
 //search a specific blog by id
 
-router.get('/:postId',async(req,res)=>{
+router.get('/blogs/:postId',async(req,res)=>{
     try{
     const posts = await Post.findById(req.params.postId);
     res.send(posts);
@@ -47,7 +47,7 @@ router.get('/:postId',async(req,res)=>{
     });
 //delete a specific blog by id
 
-router.delete('/:postId',async(req,res)=>{
+router.delete('/delete/:postId',async(req,res)=>{
     try{
     const removedPost=await Post.remove({_id: req.params.postId});
     res.send(removedPost);
@@ -58,7 +58,7 @@ router.delete('/:postId',async(req,res)=>{
 });
 
 //UPDATE a blog with given id
-router.patch('/:postId',async(req,res)=>{
+router.patch('/update/:postId',async(req,res)=>{
     try{
    const updatePost=await Post.updateOne(
        {_id: req.params.postId},
@@ -72,5 +72,22 @@ router.patch('/:postId',async(req,res)=>{
         res.send('Error:No blog found with given id')
          }
 });
+
+//post comment
+router.patch('/comments/:postId',async(req,res)=>{
+    try{
+   const updatePost=await Post.findByIdAndUpdate(
+       {_id: req.params.postId},
+       {$push:{comments:req.body.text}
+         },
+      
+       )
+       res.send(req.body.text);
+    }
+    catch (error) {
+        res.send('Error:No blog found with given id')
+         }
+});
+
 
 module.exports  = router;

@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 require('dotenv/config');
 require('./models/Post')
 const postRoute=require('./Routes/posts');
-app.use('/blogs',postRoute);
+app.use('/',postRoute);
 
 
 
